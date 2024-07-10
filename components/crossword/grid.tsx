@@ -15,19 +15,7 @@ import useCrosswordPuzzle from "@/hooks/useCrosswordPuzzle";
 import type { CrosswordPuzzle } from "@/hooks/useCrosswordPuzzle";
 import CrosswordClue from "./clue";
 
-const initialPuzzle = {
-  words: ["ABC", "DEF", "GHI", "ADG", "BEH", "CFI"],
-  clues: [
-    { direction: "across", number: 1, text: "First three letters" },
-    { direction: "across", number: 2, text: "Middle three letters" },
-    { direction: "across", number: 3, text: "Last three letters" },
-    { direction: "down", number: 1, text: "First column" },
-    { direction: "down", number: 2, text: "Second column" },
-    { direction: "down", number: 3, text: "Third column" },
-  ],
-} satisfies CrosswordPuzzle;
-
-const Crossword: React.FC = () => {
+function Crossword({ initialPuzzle}: { initialPuzzle: CrosswordPuzzle }) {
   const {
     puzzle,
     grid,
@@ -81,7 +69,7 @@ const Crossword: React.FC = () => {
   };
 
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-2 gap-4 p-4 max-w-6xl">
       <Card className={`transition-colors ${isCorrect ? "bg-green-100" : ""}`}>
         <CardHeader>
           <CardTitle>Crossword Puzzle</CardTitle>

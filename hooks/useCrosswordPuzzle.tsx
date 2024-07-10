@@ -50,9 +50,10 @@ const useCrosswordPuzzle = (initialPuzzle: CrosswordPuzzle) => {
 
   const checkCorrectness = useCallback(() => {
     const currentState = getCurrentPuzzleState();
-    return currentState.words.every(
+    const correct = currentState.words.every(
       (word, index) => word === puzzle.words[index]
     );
+    return correct;
   }, [getCurrentPuzzleState, puzzle.words]);
 
   const solvePuzzle = useCallback(() => {
