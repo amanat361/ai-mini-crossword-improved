@@ -1,4 +1,3 @@
-// hooks/useCrosswordPuzzle.ts
 import { useState, useCallback } from "react";
 import useCrosswordGrid from "./useCrosswordGrid";
 import { gridToWords, wordsToGrid } from "@/utils/gridWordConversion";

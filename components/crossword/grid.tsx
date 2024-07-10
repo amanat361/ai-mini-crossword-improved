@@ -14,6 +14,7 @@ import CrosswordCell from "./cell";
 import useCrosswordPuzzle from "@/hooks/useCrosswordPuzzle";
 import type { CrosswordPuzzle } from "@/hooks/useCrosswordPuzzle";
 import CrosswordClue from "./clue";
+import { ScrollArea } from "../ui/scroll-area";
 
 function Crossword({ initialPuzzle}: { initialPuzzle: CrosswordPuzzle }) {
   const {
@@ -78,7 +79,7 @@ function Crossword({ initialPuzzle}: { initialPuzzle: CrosswordPuzzle }) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-5 gap-2">
             {grid.map((row, rowIndex) =>
               row.map((cell, colIndex) => (
                 <CrosswordCell
@@ -106,22 +107,24 @@ function Crossword({ initialPuzzle}: { initialPuzzle: CrosswordPuzzle }) {
         <CardHeader>
           <CardTitle>Clues</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="flex flex-col gap-2">
-            <CardDescription>Across</CardDescription>
-            {puzzle.clues
-              .filter((clue) => clue.direction === "across")
-              .map((clue, index) => (
-                <CrosswordClue key={index} clue={clue} />
-              ))}
-            <CardDescription>Down</CardDescription>
-            {puzzle.clues
-              .filter((clue) => clue.direction === "down")
-              .map((clue, index) => (
-                <CrosswordClue key={index} clue={clue} />
-              ))}
-          </div>
-        </CardContent>
+        <ScrollArea className="h-[calc(100vh-200px)]">
+          <CardContent>
+            <div className="flex flex-col gap-2">
+              <CardDescription>Across</CardDescription>
+              {puzzle.clues
+                .filter((clue) => clue.direction === "across")
+                .map((clue, index) => (
+                  <CrosswordClue key={index} clue={clue} />
+                ))}
+              <CardDescription>Down</CardDescription>
+              {puzzle.clues
+                .filter((clue) => clue.direction === "down")
+                .map((clue, index) => (
+                  <CrosswordClue key={index} clue={clue} />
+                ))}
+            </div>
+          </CardContent>
+        </ScrollArea>
       </Card>
     </div>
   );
