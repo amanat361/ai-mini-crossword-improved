@@ -1,13 +1,35 @@
 "use client";
 
 import React, { useEffect, useCallback } from "react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import CrosswordCell from "./cell";
-import useCrosswordGrid from "@/hooks/useCrosswordGrid";
+import useCrosswordPuzzle from "@/hooks/useCrosswordPuzzle";
+import type { CrosswordPuzzle } from "@/hooks/useCrosswordPuzzle";
+import CrosswordClue from "./clue";
+
+const initialPuzzle = {
+  words: ["ABC", "DEF", "GHI", "ADG", "BEH", "CFI"],
+  clues: [
+    { direction: "across", number: 1, text: "First three letters" },
+    { direction: "across", number: 2, text: "Middle three letters" },
+    { direction: "across", number: 3, text: "Last three letters" },
+    { direction: "down", number: 1, text: "First column" },
+    { direction: "down", number: 2, text: "Second column" },
+    { direction: "down", number: 3, text: "Third column" },
+  ],
+} satisfies CrosswordPuzzle;
 
 const Crossword: React.FC = () => {
   const {
+    puzzle,
     grid,
     selectedCell,
     setSelectedCell,
@@ -16,9 +38,9 @@ const Crossword: React.FC = () => {
     moveToPreviousCell,
     moveDown,
     moveUp,
-    getCurrentState,
-    setGridState,
-  } = useCrosswordGrid(3, 3);
+    getCurrentPuzzleState,
+    checkCorrectness,
+  } = useCrosswordPuzzle(initialPuzzle);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -48,51 +70,68 @@ const Crossword: React.FC = () => {
     };
   }, [handleKeyDown]);
 
-  const handleSave = () => {
-    const currentState = getCurrentState();
-    console.log("Current Crossword State:", currentState);
-    // Here you can save the state to localStorage, send to a server, etc.
-  };
-
-  const handleLoad = () => {
-    // Example of loading a predefined state
-    const savedState = [
-      ["A", "B", "C"],
-      ["D", "E", "F"],
-      ["G", "H", "I"],
-    ];
-    setGridState(savedState);
+  const handleCheckPuzzle = () => {
+    const isCorrect = checkCorrectness();
+    console.log("Puzzle is correct:", isCorrect);
+    console.log("Current puzzle state:", getCurrentPuzzleState());
   };
 
   return (
-    <Card className="p-4 w-full max-w-md">
-      <CardHeader>
-        <CardTitle>Crossword Puzzle</CardTitle>
-        <CardDescription>A simple crossword puzzle game built with Next.js and Tailwind CSS.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-3 gap-2">
-          {grid.map((row, rowIndex) =>
-            row.map((cell, colIndex) => (
-              <CrosswordCell
-                key={`${rowIndex}-${colIndex}`}
-                value={cell}
-                isSelected={
-                  rowIndex === selectedCell.row && colIndex === selectedCell.col
-                }
-                onClick={() =>
-                  setSelectedCell({ row: rowIndex, col: colIndex })
-                }
-              />
-            ))
-          )}
-        </div>
-      </CardContent>
-      <CardFooter className="flex justify-between">
-        <Button onClick={handleSave}>Save State</Button>
-        <Button onClick={handleLoad}>Load State</Button>
-      </CardFooter>
-    </Card>
+    <div className="grid grid-cols-2 gap-4">
+      <Card>
+        <CardHeader>
+          <CardTitle>Crossword Puzzle</CardTitle>
+          <CardDescription>
+            A simple crossword puzzle game built with Next.js and Tailwind CSS.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-3 gap-2">
+            {grid.map((row, rowIndex) =>
+              row.map((cell, colIndex) => (
+                <CrosswordCell
+                  key={`${rowIndex}-${colIndex}`}
+                  value={cell}
+                  isSelected={
+                    rowIndex === selectedCell.row &&
+                    colIndex === selectedCell.col
+                  }
+                  onClick={() =>
+                    setSelectedCell({ row: rowIndex, col: colIndex })
+                  }
+                />
+              ))
+            )}
+          </div>
+        </CardContent>
+        <CardFooter className="flex justify-between">
+          <div className="mt-4">
+            <Button onClick={handleCheckPuzzle}>Check Puzzle</Button>
+          </div>
+        </CardFooter>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Clues</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col gap-2">
+            <CardDescription>Across</CardDescription>
+            {puzzle.clues
+              .filter((clue) => clue.direction === "across")
+              .map((clue, index) => (
+                <CrosswordClue key={index} clue={clue} />
+              ))}
+            <CardDescription>Down</CardDescription>
+            {puzzle.clues
+              .filter((clue) => clue.direction === "down")
+              .map((clue, index) => (
+                <CrosswordClue key={index} clue={clue} />
+              ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 
