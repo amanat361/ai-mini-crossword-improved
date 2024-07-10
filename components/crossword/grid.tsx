@@ -70,7 +70,7 @@ function Crossword({ initialPuzzle}: { initialPuzzle: CrosswordPuzzle }) {
   };
 
   return (
-    <div className="grid grid-cols-2 gap-4 p-4 max-w-6xl">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 max-w-6xl">
       <Card className={`transition-colors ${isCorrect ? "bg-green-100" : ""}`}>
         <CardHeader>
           <CardTitle>Crossword Puzzle</CardTitle>
