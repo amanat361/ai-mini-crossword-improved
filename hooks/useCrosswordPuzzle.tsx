@@ -14,6 +14,9 @@ export interface CrosswordPuzzle {
   clues: Clue[];
 }
 
+const createEmptyGrid = (rows: number, cols: number): string[][] =>
+  Array(rows).fill(Array(cols).fill(""));
+
 const useCrosswordPuzzle = (initialPuzzle: CrosswordPuzzle) => {
   const [puzzle, setPuzzle] = useState<CrosswordPuzzle>(initialPuzzle);
   const rows = Math.ceil(initialPuzzle.words.length / 2);
@@ -33,7 +36,7 @@ const useCrosswordPuzzle = (initialPuzzle: CrosswordPuzzle) => {
   } = useCrosswordGrid(
     rows,
     cols,
-    wordsToGrid(initialPuzzle.words, rows, cols)
+    createEmptyGrid(rows, cols)
   );
 
   const getCurrentPuzzleState = useCallback(() => {
@@ -52,6 +55,18 @@ const useCrosswordPuzzle = (initialPuzzle: CrosswordPuzzle) => {
     );
   }, [getCurrentPuzzleState, puzzle.words]);
 
+  const solvePuzzle = useCallback(() => {
+    const currentState = getCurrentPuzzleState();
+    const solution = currentState.words.map((word, index) =>
+      puzzle.words[index]
+    );
+    setGridState(wordsToGrid(solution, rows, cols));
+  }, [getCurrentPuzzleState, puzzle.words, setGridState, rows, cols]);
+
+  const resetPuzzle = useCallback(() => {
+    setGridState(createEmptyGrid(rows, cols));
+  }, [setGridState, rows, cols]);
+
   return {
     puzzle,
     grid,
@@ -64,6 +79,8 @@ const useCrosswordPuzzle = (initialPuzzle: CrosswordPuzzle) => {
     moveUp,
     getCurrentPuzzleState,
     checkCorrectness,
+    solvePuzzle,
+    resetPuzzle,
     setGridState,
   };
 };

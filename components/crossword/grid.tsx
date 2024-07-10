@@ -40,7 +40,11 @@ const Crossword: React.FC = () => {
     moveUp,
     getCurrentPuzzleState,
     checkCorrectness,
+    solvePuzzle,
+    resetPuzzle,
   } = useCrosswordPuzzle(initialPuzzle);
+
+  const isCorrect = checkCorrectness();
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -78,7 +82,7 @@ const Crossword: React.FC = () => {
 
   return (
     <div className="grid grid-cols-2 gap-4">
-      <Card>
+      <Card className={`transition-colors ${isCorrect ? "bg-green-100" : ""}`}>
         <CardHeader>
           <CardTitle>Crossword Puzzle</CardTitle>
           <CardDescription>
@@ -105,9 +109,9 @@ const Crossword: React.FC = () => {
           </div>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <div className="mt-4">
-            <Button onClick={handleCheckPuzzle}>Check Puzzle</Button>
-          </div>
+          <Button onClick={resetPuzzle}>Reset Puzzle</Button>
+          {/* <Button onClick={handleCheckPuzzle}>Check Puzzle</Button> */}
+          <Button onClick={solvePuzzle}>Solve Puzzle</Button>
         </CardFooter>
       </Card>
       <Card>
