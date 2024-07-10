@@ -4,16 +4,12 @@ interface CrosswordCellProps {
   value: string;
   isSelected: boolean;
   onClick: () => void;
-  rowIndex: number;
-  colIndex: number;
 }
 
 const CrosswordCell: React.FC<CrosswordCellProps> = ({
   value,
   isSelected,
   onClick,
-  rowIndex,
-  colIndex,
 }) => {
   return (
     <div

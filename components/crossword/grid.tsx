@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useEffect, useCallback } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import CrosswordCell from "./cell";
 import useCrosswordGrid from "@/hooks/useCrosswordGrid";
 
@@ -15,7 +16,9 @@ const Crossword: React.FC = () => {
     moveToPreviousCell,
     moveDown,
     moveUp,
-  } = useCrosswordGrid(5, 5);
+    getCurrentState,
+    setGridState,
+  } = useCrosswordGrid(3, 3);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -45,11 +48,31 @@ const Crossword: React.FC = () => {
     };
   }, [handleKeyDown]);
 
+  const handleSave = () => {
+    const currentState = getCurrentState();
+    console.log("Current Crossword State:", currentState);
+    // Here you can save the state to localStorage, send to a server, etc.
+  };
+
+  const handleLoad = () => {
+    // Example of loading a predefined state
+    const savedState = [
+      ["A", "B", "C"],
+      ["D", "E", "F"],
+      ["G", "H", "I"],
+    ];
+    setGridState(savedState);
+  };
+
   return (
-    <Card className="p-4 w-full max-w-md mx-auto">
-      <CardContent className="p-0">
-        <div className="grid grid-cols-5 gap-2">
-          {grid.map((row: string[], rowIndex: number) =>
+    <Card className="p-4 w-full max-w-md">
+      <CardHeader>
+        <CardTitle>Crossword Puzzle</CardTitle>
+        <CardDescription>A simple crossword puzzle game built with Next.js and Tailwind CSS.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-3 gap-2">
+          {grid.map((row, rowIndex) =>
             row.map((cell, colIndex) => (
               <CrosswordCell
                 key={`${rowIndex}-${colIndex}`}
@@ -60,13 +83,15 @@ const Crossword: React.FC = () => {
                 onClick={() =>
                   setSelectedCell({ row: rowIndex, col: colIndex })
                 }
-                rowIndex={rowIndex}
-                colIndex={colIndex}
               />
             ))
           )}
         </div>
       </CardContent>
+      <CardFooter className="flex justify-between">
+        <Button onClick={handleSave}>Save State</Button>
+        <Button onClick={handleLoad}>Load State</Button>
+      </CardFooter>
     </Card>
   );
 };
